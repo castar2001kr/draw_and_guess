@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import game.repository.idgenerator.Info;
-import game.repository.info.Player;
 import game.repository.manager.Room;
 import game.repository.manager.RoomManager;
+import game.repository.player.Player;
 
 /**
  * Servlet implementation class controller

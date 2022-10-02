@@ -1,4 +1,4 @@
-package game.repository.info;
+package game.repository.player;
 
 import java.io.IOException;
 
@@ -72,6 +72,10 @@ public class Player {
 			}
 		}
 		
+	}
+	
+	public void plusScore(int s) {
+		this.score+=s;
 	}
 	
 }

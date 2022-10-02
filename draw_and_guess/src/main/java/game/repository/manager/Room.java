@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
-import game.repository.info.Player;
-import game.repository.router.Router;
+import game.repository.player.Player;
+import game.repository.router.Router1;
 import member.dto.MemberDTO;
 
 public class Room {
@@ -18,7 +18,7 @@ public class Room {
 	private final String title;
 	private int hostPid;
 	
-	private final Router router;
+	private final Router1 router;
 	
 	public String getTitle() {
 		return this.title;
@@ -29,7 +29,7 @@ public class Room {
 	
 	public Room(String title, int rid){ // make new room
 		
-		router=new Router(this);
+		router=new Router1(this);
 		
 		idGen=new IdGenerator<Player>(SIZE);
 		this.title=title;
@@ -134,6 +134,7 @@ public class Room {
 		RoomManager.getInstance().getRoom(rid).setState(true);
 		this.idGen.unlock();
 	}
+	
 	
 	
 	

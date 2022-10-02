@@ -1,0 +1,66 @@
+package game.repository.router;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+
+import game.repository.manager.Room;
+
+public class Process0 {
+
+	private final Room room;
+	
+	private final String ans;
+	
+	private final int SCORE= 30;
+	
+	private int winnerPid=-1;
+	
+	public Process0(Room room, String ans) {
+		
+		this.room=room;
+		this.ans=ans;
+	}
+	
+	public boolean emit_0(String input, int pid) { //collect ans;
+		
+		if(this.ans.equals(input)) {
+			
+			synchronized(this){
+				
+				if(this.winnerPid<0)
+				
+				this.winnerPid=pid;
+				
+				String msg = "{h:0, b{act :0 , pid : "+ this.winnerPid+"}}";
+				
+				sendAll(msg);
+				
+				room.getPlayer(pid).getInfo().plusScore(SCORE);
+				
+				room.stop();
+				
+				return true;
+			}
+			
+		}
+		
+		return false;
+	}
+	
+	
+	
+	private void sendAll(String msg) {
+		
+		Queue<Integer> q = room.getPlayers();
+		
+		while(!q.isEmpty()) {
+			
+			room.getPlayer(q.poll()).getInfo().emitMsg(msg);
+			
+		}
+		
+	}
+	
+	
+}

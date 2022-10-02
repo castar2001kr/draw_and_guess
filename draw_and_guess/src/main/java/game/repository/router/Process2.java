@@ -2,8 +2,8 @@ package game.repository.router;
 
 import java.util.Queue;
 
-import game.repository.info.Player;
 import game.repository.manager.Room;
+import game.repository.player.Player;
 
 public class Process2 { //process enter, out, changeHost msg
 	
@@ -53,7 +53,7 @@ public class Process2 { //process enter, out, changeHost msg
 	
 	public void emit_2() { //change host
 		
-		String msg="{h:2, b : {act:2,pid:"+room.getHostPid()+"}}"; //JSON msg
+		String msg="{h:1, b : {act:2,pid:"+room.getHostPid()+"}}"; //JSON msg
 		
 		Queue<Integer> q = room.getPlayers();
 		

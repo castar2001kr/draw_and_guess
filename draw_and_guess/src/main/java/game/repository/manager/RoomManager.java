@@ -4,7 +4,7 @@ import java.util.Queue;
 
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
-import game.repository.info.Player;
+import game.repository.player.Player;
 
 public class RoomManager {
 

@@ -2,12 +2,12 @@ package game.repository.router;
 
 import game.repository.manager.Room;
 
-public class Router {
+public class Router1 {
 
 	
 	private final Room room;
 	
-	public Router(Room room) {
+	public Router1(Room room) {
 		
 		this.room=room;
 		
