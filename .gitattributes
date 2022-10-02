@@ -1,2 +1,4 @@
 *.html linguist-detectable=false
 *.xml linquist-detectable=false
+*.css linquist-detectable=false
+*.bat linquist-detectable=false
