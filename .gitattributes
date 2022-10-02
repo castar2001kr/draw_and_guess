@@ -4,3 +4,5 @@
 *.css linguist-vendored=false
 *.bat linguist-vendored=false
 *.sh linguist-vendored=false
+*.java linguist-vendored=true
+*.js linguist-vendored=true
