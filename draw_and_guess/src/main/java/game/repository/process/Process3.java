@@ -1,4 +1,4 @@
-package game.repository.router;
+package game.repository.process;
 
 import java.util.Queue;
 
@@ -14,7 +14,7 @@ public class Process3 {
 	}
 
 	
-	public void emit_0(String msg){
+	public void emit_0(String msg){ //chat msg
 		
 		sendAll(msg);
 		

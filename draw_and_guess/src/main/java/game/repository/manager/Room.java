@@ -6,7 +6,6 @@ import java.util.Stack;
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
 import game.repository.player.Player;
-import game.repository.router.Router1;
 import member.dto.MemberDTO;
 
 public class Room {
@@ -18,7 +17,6 @@ public class Room {
 	private final String title;
 	private int hostPid;
 	
-	private final Router1 router;
 	
 	public String getTitle() {
 		return this.title;
@@ -28,8 +26,6 @@ public class Room {
 	
 	
 	public Room(String title, int rid){ // make new room
-		
-		router=new Router1(this);
 		
 		idGen=new IdGenerator<Player>(SIZE);
 		this.title=title;
@@ -65,7 +61,7 @@ public class Room {
 	}
 	
 	
-	synchronized public void out(Player p) {
+	synchronized public boolean out(Player p) {
 	
 		idGen.erase(p.getPid());
 		
@@ -85,7 +81,7 @@ public class Room {
 				}else {
 					
 					this.setHostPid(temp);
-					return;
+					return true;
 					
 				}
 			}
@@ -93,10 +89,10 @@ public class Room {
 			// clear room info
 			RoomManager.getInstance().clearRoom(rid);
 			this.cleared=true;
-			
+			return false;
 		}
 			
-		
+		return false;
 	}
 	
 	public Queue<Integer> getPlayers() {
@@ -138,9 +134,8 @@ public class Room {
 	
 	
 	
-	public void speak(String msg) {
+	public void speak(String msg) { //send msg to router
 		
-		router.pass(msg);
 		
 		return;
 		

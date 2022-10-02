@@ -1,4 +1,4 @@
-package game.repository.router;
+package game.repository.process;
 
 import java.util.Queue;
 
@@ -24,6 +24,7 @@ public class Process1 {
 	
 	public void emit_1() { //play
 		
+		room.play();
 		String msg = "{h : 1, b : {act : 1}}";
 		sendAll(msg);
 		
@@ -32,8 +33,8 @@ public class Process1 {
 	
 	public void emit_2() { //stop
 		
+		room.stop();
 		String msg = "{h : 1, b : {act : 2}}";
-		
 		sendAll(msg);
 		
 	}

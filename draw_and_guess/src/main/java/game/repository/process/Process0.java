@@ -1,6 +1,5 @@
-package game.repository.router;
+package game.repository.process;
 
-import java.util.LinkedList;
 import java.util.Queue;
 
 
@@ -37,8 +36,6 @@ public class Process0 {
 				sendAll(msg);
 				
 				room.getPlayer(pid).getInfo().plusScore(SCORE);
-				
-				room.stop();
 				
 				return true;
 			}
