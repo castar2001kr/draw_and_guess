@@ -1,7 +1,9 @@
 package game.repository.idgenerator;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 
@@ -17,21 +19,27 @@ public class IdGenerator<E> {
 	
 	private Node lastNode;
 	
-	private HashMap<Integer,Node> nodeMap;
+	private final Map<Integer,Node> nodeMap;
+	
+	private boolean lock_regist = false;
 	
 	
 	@SuppressWarnings("unchecked")
 	public IdGenerator(int size){
 	
-			
-			
 			this.size=size;
 
-			infoSet=(Info<E>[]) new Object[size];
+			infoSet=(Info<E>[]) new Info[size];
+			
+			for(int i=0; i<size; i++) {
+				infoSet[i]=new Info<E>();
+			}
 			
 			this.firstNode=new Node();
 			
 			this.lastNode=firstNode;
+			
+			this.nodeMap = new HashMap<Integer,Node>();
 			
 			bucket=new LinkedList<Integer>();
 			
@@ -45,8 +53,24 @@ public class IdGenerator<E> {
 		
 	}
 	
+	synchronized public void lock() {
+		
+		this.lock_regist=true;
+		
+	}
+	
+	synchronized public void unlock() {
+		
+		this.lock_regist=false;
+		
+	}
+	
 	
 	public int getID() {
+		
+		if(this.lock_regist) {
+			return -1;
+		}
 		
 		Object tmp;
 		
@@ -65,28 +89,21 @@ public class IdGenerator<E> {
 			
 			n.id=temp;
 			
-			synchronized(this) {
-				
-				n.setBefore(lastNode);
-				
-				lastNode.setAfter(n);
-				
-				nodeMap.put(temp, n);
-				
-				lastNode=n;
-				
-				infoSet[temp].setState(true);
-				
-				return temp;
-			}
+			n.setBefore(lastNode);
 			
-		
-		
+			lastNode.setAfter(n);
+			
+			nodeMap.put(temp, n); //must be synchronized o
+			
+			lastNode=n;
+			
+			return temp;
+	
 	}
 	
 	public boolean erase(int id) {
 		
-		synchronized(this) {
+		synchronized(infoSet[id]) {
 			
 			if(nodeMap.containsKey(id)) {
 				
@@ -123,7 +140,7 @@ public class IdGenerator<E> {
 			
 			while(cur!=null) {
 				
-				result.add(cur.after.id);
+				result.add(cur.id);
 				cur=cur.after;
 			}
 			
@@ -134,24 +151,29 @@ public class IdGenerator<E> {
 	
 	public boolean set(int id, Info<E> info) {
 		
-		if(infoSet[id].getState()) {
-			
-			infoSet[id]=info;
-			return true;
+		synchronized(infoSet[id]) {
+	
+				infoSet[id]=info;
+				
+				return true;
+	
 		}
 		
-		return false;
 		
 	}
 	
 	public Info<E> get(int id) {
 		
-		if(infoSet[id].getState()) {
+		synchronized(infoSet[id]) {
 			
-			return infoSet[id];
+			if(infoSet[id].getState()) {
+				
+				return infoSet[id];
+			}
+			
+			return null;
 		}
 		
-		return null;
 	}
 
 		

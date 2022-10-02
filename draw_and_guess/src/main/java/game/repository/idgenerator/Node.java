@@ -36,13 +36,13 @@ public class Node {
 		
 	}
 	
-	public void setBefore(Node node) {
+	synchronized public void setBefore(Node node) {
 		
 		
 		this.before=node;
 	}
 	
-	public void setAfter(Node node) {
+	synchronized public void setAfter(Node node) {
 		
 		this.after=node;
 	}

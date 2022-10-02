@@ -1,25 +1,20 @@
 package game.repository.idgenerator;
 
-public class Info<E> {
+public class Info<E> { //you must synchronized this object when you do I.O task with this!
 
 	private boolean state;
 	private E info;
 	
-	boolean getState() {
+	public boolean getState() {
 		
-			
 			return state;
-		
-		
+	
 	}
 	
-	void setState(boolean bool) {
+	public void setState(boolean bool) {
 
-		synchronized(this) {
-			
 			this.state=bool;
-		}
-		
+	
 	}
 	
 	public E getInfo() {

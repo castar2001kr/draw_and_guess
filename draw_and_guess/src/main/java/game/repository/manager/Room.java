@@ -6,60 +6,97 @@ import java.util.Stack;
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
 import game.repository.info.Player;
+import game.repository.router.Router;
 import member.dto.MemberDTO;
 
 public class Room {
 	
-	
+	private final int rid;
 	private final IdGenerator<Player> idGen;
 	private static final int SIZE = 6;
 	
 	private final String title;
-	private Player host;
+	private int hostPid;
 	
-	private final GameManager manager;
+	private final Router router;
 	
 	public String getTitle() {
 		return this.title;
 	}
 	
+	public boolean cleared = false;
 	
-	public Room(String title, Player host){
+	
+	public Room(String title, int rid){ // make new room
 		
-		manager=new GameManager();
+		router=new Router(this);
 		
 		idGen=new IdGenerator<Player>(SIZE);
 		this.title=title;
-		this.host=host;
+		this.hostPid=0;
+		this.rid=rid;
 	}
 	
-	public boolean enter(Player p) {
-		
+	synchronized public boolean enter(Player p) { 	
 		
 		int pid = idGen.getID();
 		
-		if(pid<0) {
+		if(pid<0||this.cleared) {
 			return false;
 		}
 		
 		p.setPid(pid);
 		
-		Info<Player> i=new Info<Player>();
+		Info<Player> info=new Info<Player>();
+
+		synchronized(info) {
+			
+			info.setInfo(p);
+			
+			idGen.set(pid,info);
+			
+			info.setState(true);
+			
+			return true;
+		}
 		
-		i.setInfo(p);
 		
-		idGen.set(pid,i);
-		
-		return true;
 		
 	}
 	
 	
-	public boolean out(Player p) {
-		
+	synchronized public void out(Player p) {
+	
 		idGen.erase(p.getPid());
 		
-		return true;
+		if(p.getPid()==this.getHostPid()) {
+			
+			this.stop();
+			
+			Queue<Integer> q = this.idGen.getAll();
+			
+			while(!q.isEmpty()) {
+				
+				int temp = (int) q.poll();
+				
+				if(this.idGen.get(temp)==null||this.idGen.get(temp).getState()==false) {
+					
+					
+				}else {
+					
+					this.setHostPid(temp);
+					return;
+					
+				}
+			}
+			
+			// clear room info
+			RoomManager.getInstance().clearRoom(rid);
+			this.cleared=true;
+			
+		}
+			
+		
 	}
 	
 	public Queue<Integer> getPlayers() {
@@ -68,27 +105,43 @@ public class Room {
 		
 	}
 	
-	public Player getHost() {
-		return host;
-	}
-	
-	
-	public GameManager gameManager() {
-		return this.manager;
-	}
-	
-	
-	public String to_manager(String msg) {
+	public Info<Player> getPlayer(int pid){
 		
-		synchronized(manager) {
-			
-			String result=null;
-			
-			//msg to manager
-			//manager.emitMsg(msg);
-			
-			return result;
-		}
+		return this.idGen.get(pid);
+	}
+	
+	
+	public int getHostPid() {
+		
+		return hostPid;
+	}
+	
+	synchronized public void setHostPid(int pid) {
+		
+		this.hostPid=pid;
+		
+	}
+	
+	synchronized public void play() {
+		
+		RoomManager.getInstance().getRoom(rid).setState(false);
+		this.idGen.lock();
+		
+	}
+	
+	synchronized public void stop() {
+		
+		RoomManager.getInstance().getRoom(rid).setState(true);
+		this.idGen.unlock();
+	}
+	
+	
+	
+	public void speak(String msg) {
+		
+		router.pass(msg);
+		
+		return;
 		
 	}
 	
