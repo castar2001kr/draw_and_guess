@@ -89,13 +89,17 @@ public class IdGenerator<E> {
 			
 			n.id=temp;
 			
-			n.setBefore(lastNode);
-			
-			lastNode.setAfter(n);
-			
-			nodeMap.put(temp, n); //must be synchronized 
-			
-			lastNode=n;
+			synchronized(nodeMap) {
+				
+				n.setBefore(lastNode);
+				
+				lastNode.setAfter(n);
+				
+				nodeMap.put(temp, n); //must be synchronized 
+				
+				lastNode=n;
+				
+			}
 			
 			return temp;
 	
