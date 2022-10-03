@@ -93,7 +93,7 @@ public class IdGenerator<E> {
 			
 			lastNode.setAfter(n);
 			
-			nodeMap.put(temp, n); //must be synchronized o
+			nodeMap.put(temp, n); //must be synchronized 
 			
 			lastNode=n;
 			
@@ -105,22 +105,26 @@ public class IdGenerator<E> {
 		
 		synchronized(infoSet[id]) {
 			
-			if(nodeMap.containsKey(id)) {
+			synchronized(nodeMap) {
 				
-				Node n = nodeMap.get(id);
-				
-				if(n.equals(lastNode)) {
+				if(nodeMap.containsKey(id)) {
 					
-					lastNode=n.before;	
+					Node n = nodeMap.get(id);
+					
+					if(n.equals(lastNode)) {
+						
+						lastNode=n.before;	
+					}
+					
+					n.erase();
+					
+					infoSet[id].setState(false);
+					
+					return true;
+					
 				}
-				
-				n.erase();
-				
-				infoSet[id].setState(false);
-				
-				return true;
-				
 			}
+			
 			
 			
 			return false;

@@ -24,7 +24,7 @@ public class Router3 {
 		
 	}
 	
-	public void chat(String msg) { // fomated JSON msg
+	public void chat(String msg) { // fomated JSON msg. you have to check pid at that time msg entered msg router with JSON_parser
 		
 		pro3.emit_0(msg);
 		
