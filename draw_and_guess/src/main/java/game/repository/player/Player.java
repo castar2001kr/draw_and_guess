@@ -1,22 +1,30 @@
 package game.repository.player;
 
 import java.io.IOException;
+import java.util.Queue;
 
 import javax.websocket.Session;
+
+import org.json.simple.JSONArray;
 
 public class Player {
 	
 	private Session session;
 	
-	int pid;
+	private int pid;
 	
-	String name;
+	private String name;
 	
-	String id;
+	private String id;
 	
-	int lv;
+	private int lv;
 	
-	int score;
+	private int score;
+	
+	private Queue<String> msgQ;
+	
+	private boolean state = false;
+	
 
 	public String getName() {
 		return name;
@@ -59,20 +67,43 @@ public class Player {
 		this.pid=pid;
 	}
 	
-	public boolean emitMsg(String msg) {
+	public boolean propMsg(String msg) {
 		
-		synchronized(this) {
+		synchronized(msgQ) {
 			
-			try {
-				this.session.getBasicRemote().sendText(msg);
+				msgQ.add(msg);
 				return true;
-			} catch (IOException e) {
-				
-				return false;
-			}
+			
 		}
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean emitMsg() {
+		
+		synchronized (this) {
+			
+			try {
+				
+				JSONArray arr= new JSONArray();
+
+				while(!msgQ.isEmpty()) {
+					
+					arr.add((msgQ.poll()));
+					
+				}
+				
+				this.session.getBasicRemote().sendText(arr.toJSONString());
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return false;
+			}
+			return true;
+		}
+		
+	}
+	
 	
 	public void plusScore(int s) {
 		this.score+=s;

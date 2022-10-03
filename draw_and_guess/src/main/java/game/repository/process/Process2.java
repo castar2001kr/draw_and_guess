@@ -33,9 +33,10 @@ public class Process2 { //process enter, out, changeHost msg
 			
 			int temp = q.poll();
 			
-			room.getPlayer(temp).getInfo().emitMsg(msg);
+			room.getPlayer(temp).getInfo().propMsg(msg);
 			
 		}
+		
 		return true;
 		
 	}
@@ -53,7 +54,7 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().emitMsg(msg);
+			room.getPlayer(q.poll()).getInfo().propMsg(msg);
 		}
 		
 		if(hostChanged) {
@@ -67,13 +68,13 @@ public class Process2 { //process enter, out, changeHost msg
 	
 	private void emit_2() { //change host event's occured by host has been out from room
 		
-		String msg="{h:1, b : {act:2,pid:"+room.getHostPid()+"}}"; //JSON msg
+		String msg="{h:1, b : {act:2,pid:"+room.getHostPid()+"}}"; //JSON msg. ajax 메시지가 나중에 도착하는 것을 방지하기 위해 msg를 먼저 받으면 클라이언트는 ajax로 호스트 설정 이후 요청해야 한다.
 		
 		Queue<Integer> q = room.getPlayers();
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().emitMsg(msg);
+			room.getPlayer(q.poll()).getInfo().propMsg(msg);
 		}
 		
 	}

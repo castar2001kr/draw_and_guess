@@ -53,7 +53,7 @@ public class Process0 {
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().emitMsg(msg);
+			room.getPlayer(q.poll()).getInfo().propMsg(msg);
 			
 		}
 		

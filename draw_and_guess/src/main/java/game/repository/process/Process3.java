@@ -26,7 +26,7 @@ public class Process3 {
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().emitMsg(msg);
+			room.getPlayer(q.poll()).getInfo().propMsg(msg);
 			
 		}
 		
