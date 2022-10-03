@@ -24,7 +24,7 @@ public class Router3 {
 		
 	}
 	
-	public void chat(String msg) {
+	public void chat(String msg) { // fomated JSON msg
 		
 		pro3.emit_0(msg);
 		

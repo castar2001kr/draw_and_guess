@@ -21,7 +21,7 @@ public class Process0 {
 		this.ans=ans;
 	}
 	
-	public boolean emit_0(String input, int pid) { //collect ans;
+	public boolean emit_0(String input, int pid) { //collect ans; and notify winner
 		
 		if(this.ans.equals(input)) {
 			

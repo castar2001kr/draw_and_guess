@@ -31,7 +31,7 @@ public class Process1 {
 	}
 	
 	
-	public void emit_2() { //stop
+	public void emit_2() { //stop game msg. if the client's sent this msg without notify of winner, it means that the game has been interrupted stop.
 		
 		room.stop();
 		String msg = "{h : 1, b : {act : 2}}";

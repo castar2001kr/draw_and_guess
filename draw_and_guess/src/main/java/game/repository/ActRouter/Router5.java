@@ -17,7 +17,7 @@ public class Router5 {
 		pro3=new Process3(room);
 	}
 	
-	public void draw(String msg, int pid) {
+	public void draw(String msg, int pid) { //formated JSON msg
 		
 		if(room.getHostPid()==pid) {
 			

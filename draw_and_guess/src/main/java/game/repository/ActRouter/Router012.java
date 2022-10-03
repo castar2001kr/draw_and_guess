@@ -1,5 +1,8 @@
 package game.repository.ActRouter;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import game.repository.manager.Room;
 import game.repository.player.Player;
 import game.repository.process.Process0;
@@ -16,6 +19,7 @@ public class Router012 {
 	private Process1 pro1;
 	private Process2 pro2;
 	
+	private Timer timer;
 	
 	private boolean pstate = false;
 	
@@ -29,11 +33,24 @@ public class Router012 {
 		
 	}
 	
-	synchronized public void play(String ans) {
+	synchronized public void play(String ans) { // it can be occured by only host
 		
-		if(!pstate) {//play draw; 
-			this.pro0=new Process0(this.room, ans); //make Process0
+		if(!pstate) {//play; 
+			this.pro0=new Process0(this.room, ans); //make Process0 : collecting answers
 			pstate=true;
+			pro1.emit_1();
+			
+			timer = new Timer();
+			TimerTask task = new TimerTask() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					pro1.emit_2();
+				}
+			};
+			
+			timer.schedule(task, 1000*60);
 			
 		}
 	}
@@ -47,8 +64,14 @@ public class Router012 {
 			
 			if(corrected) {
 				
-				pro1.emit_1(); //stop;
+				pro1.emit_2(); //stop;
 				this.pstate=false;
+				
+				if(timer!=null) {
+					timer.cancel();
+					timer=null;
+				}
+				
 			}
 			
 		}
@@ -70,6 +93,12 @@ public class Router012 {
 			
 			pro1.emit_1(); //stop
 			this.pstate=false;
+			
+			if(timer!=null) {
+				timer.cancel();
+				timer=null;
+			}
+			
 		}
 		
 	}
