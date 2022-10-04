@@ -3,6 +3,13 @@ package member.dto;
 public class MemberDTO {
 
 	
+	
+	private int lv;
+	private String name;
+	private String id;
+	private String pwd;
+	private String email;
+	
 
 	public String getName() {
 		return name;
@@ -28,11 +35,14 @@ public class MemberDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	private int lv;
-	private String name;
-	private String id;
-	private String pwd;
-	private String email;
+	
+	public int getLv() {
+		return this.lv;
+	}
+
+	public void setLv(int lv) {
+		this.lv=lv;
+	}
 	
 	
 }

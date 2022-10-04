@@ -9,11 +9,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import game.repository.idgenerator.Info;
 import game.repository.manager.Room;
 import game.repository.manager.RoomManager;
 import game.repository.player.Player;
+import member.dto.MemberDTO;
 
 /**
  * Servlet implementation class controller
@@ -37,31 +39,24 @@ public class make extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		
-		Player p = new Player();
+		MemberDTO dto=(MemberDTO) request.getSession().getAttribute("memberInfo");
+		
+		Player player  = new Player();
+		player.setId(dto.getId());
+		player.setLv(dto.getLv());
+		player.setName(dto.getName());
+		
+		
 		try {
 			
+			String title = (String) request.getAttribute("title"); //post title=?
 			
-			String title=request.getParameter("title");
-					
+			int rid = RoomManager.getInstance().makeRoom(player, title);
+			request.getSession().setAttribute("rid",rid);
+			request.getSession().setAttribute("state", true);
 			
-			System.out.println(""+RoomManager.getInstance().makeRoom(p,title)+"번 방이 생성되었다.");
 			
-			System.out.println("mypid = "+p.getPid());
 			
-			Queue<Integer> q=RoomManager.getInstance().getRooms();
-			
-			while(!q.isEmpty()) {
-				
-				try {
-					int num = q.poll();
-					System.out.print(""+num+" : ");
-					System.out.println(RoomManager.getInstance().getRoom(num).getInfo().getTitle());
-				}catch(Exception e) {
-					
-					System.out.println("없는 방 조회");
-				}
-				
-			}
 		}catch (Exception e) {
 			// TODO: handle exception
 		}

@@ -31,7 +31,7 @@ public class Process0 {
 				
 				this.winnerPid=pid;
 				
-				String msg = "{h:0, b{act :0 , pid : "+ this.winnerPid+"}}";
+				String msg = "{ h : 0, p : " + this.winnerPid + " , a : 1 , b : 0 }";
 				
 				sendAll(msg);
 				

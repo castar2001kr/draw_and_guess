@@ -67,29 +67,28 @@ public class Node {
 	
 //	a b c d
 //
-//	ë™ì‹œ ìˆ˜í–‰
+//	µ¿½Ã ¼öÇà
 //	b.afterNode = d
 //	a.afterNode = c
 //	c.beforeNode = a
 //	d.beforeNode = b
 //
-//	ë°”ë¥¸ ìˆœ : a c d
-//	ì—­ìˆœ : d b a
-//	êµì°¨ ê²€ì¦ : a d (ë°”ë¥¸ ìˆœì„ ì—­ìˆœë¹„êµí•´ì„œ ìžˆëŠ” ì›ì†Œë“¤ë§Œ ê°€ì ¸ì˜¨ë‹¤.)
+//	¹Ù¸¥ ¼ø : a c d
+//	¿ª¼ø : d b a
+//	±³Â÷ °ËÁõ : a d (¹Ù¸¥ ¼øÀ» ¿ª¼øºñ±³ÇØ¼­ ÀÖ´Â ¿ø¼Òµé¸¸ °¡Á®¿Â´Ù.)
 //
-//	ì‹œê°„ì°¨ ìˆ˜í–‰
+//	½Ã°£Â÷ ¼öÇà
 //	a.afterNode = c
 //	c.beforeNode = a
 //
 //	a.beforeNode = d
 //	d.beforeNode = a
 //
-//	ë°”ë¥¸ ìˆœ : a d
-//	ì—­ìˆœ : d a
+//	¹Ù¸¥ ¼ø : a d
+//	¿ª¼ø : d a
 
-// í•˜ì§€ë§‰ ì¶”ê°€ë¥¼ ê³ ë ¤í•˜ë©´ ë¬¸ì œê°€ ë°œìƒ.
-// ë§ˆì§€ë§‰ ë…¸ë“œì— ì¶”ê°€ë˜ëŠ” ê³¼ì •ì´ ë§ˆì§€ë§‰ ë…¸ë“œë¥¼ ì‚­ì œí•˜ëŠ” ê³¼ì •ê³¼ ë™ì‹œì— ì´ë£¨ì–´ì§€ë©´,
-// ë§ˆì§€ë§‰ ë…¸ë“œê°€ ì‚¬ë¼ì§.-> ì¶”ê°€ë‚˜ ì‚­ì œí•  ë•Œ, ì°¸ì¡°í•˜ëŠ” í•´ì‹œë§µì„ ë™ê¸°í™”í•˜ëŠ” ê²ƒì´ ë‚˜ìŒ.
-	
+// ÇÏÁö¸· Ãß°¡¸¦ °í·ÁÇÏ¸é ¹®Á¦°¡ ¹ß»ý.
+// ¸¶Áö¸· ³ëµå¿¡ Ãß°¡µÇ´Â °úÁ¤ÀÌ ¸¶Áö¸· ³ëµå¸¦ »èÁ¦ÇÏ´Â °úÁ¤°ú µ¿½Ã¿¡ ÀÌ·ç¾îÁö¸é,
+// ¸¶Áö¸· ³ëµå°¡ »ç¶óÁü.-> Ãß°¡³ª »èÁ¦ÇÒ ¶§, ÂüÁ¶ÇÏ´Â ÇØ½Ã¸ÊÀ» µ¿±âÈ­ÇÏ´Â °ÍÀÌ ³ªÀ½.
 	
 }

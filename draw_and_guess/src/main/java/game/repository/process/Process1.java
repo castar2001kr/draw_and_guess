@@ -16,7 +16,7 @@ public class Process1 {
 	
 	public void emit_0() { //wait no use
 		
-		String msg = "{h : 1, b : {act : 0}}";
+		String msg = "{h : 1, p : -1, a : 0, b : 0 }";
 		sendAll(msg);
 		
 		
@@ -25,7 +25,7 @@ public class Process1 {
 	public void emit_1() { //play
 		
 		room.play();
-		String msg = "{h : 1, b : {act : 1}}";
+		String msg = "{h : 1, p : -1, a : 1, b : 0 }";
 		sendAll(msg);
 		
 	}
@@ -34,7 +34,7 @@ public class Process1 {
 	public void emit_2() { //stop game msg. if the client's sent this msg without notify of winner, it means that the game has been interrupted stop.
 		
 		room.stop();
-		String msg = "{h : 1, b : {act : 2}}";
+		String msg = "{h : 1, p : -1, a : 2, b : 0 }";
 		sendAll(msg);
 		
 	}

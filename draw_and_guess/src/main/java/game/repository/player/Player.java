@@ -78,6 +78,15 @@ public class Player {
 		
 	}
 	
+	public void setState(boolean s) {
+		
+		this.state=s;
+	}
+	
+	public boolean getState(){
+		return this.state;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public boolean emitMsg() {
 		

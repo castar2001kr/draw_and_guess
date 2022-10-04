@@ -3,6 +3,8 @@ package game.repository.manager;
 import java.util.Queue;
 import java.util.Stack;
 
+import game.repository.ActRouter.ActEntrance;
+import game.repository.MsgRouter.MsgEntrance;
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
 import game.repository.player.Player;
@@ -17,6 +19,8 @@ public class Room {
 	private final String title;
 	private int hostPid;
 	
+	ActEntrance actEnt;
+	MsgEntrance msgEnt;
 	
 	public String getTitle() {
 		return this.title;
@@ -31,6 +35,8 @@ public class Room {
 		this.title=title;
 		this.hostPid=0;
 		this.rid=rid;
+		actEnt=new ActEntrance(this);
+		msgEnt=new MsgEntrance(actEnt);
 	}
 	
 	synchronized public boolean enter(Player p) { 	
@@ -134,11 +140,15 @@ public class Room {
 	
 	
 	
-	public void speak(String msg) { //send msg to router
+	public void speak(String msg, int pid) { //send msg to router
 		
+		this.msgEnt.saveMsg(msg, pid);
 		
-		return;
+	}
+	
+	public ActEntrance getAct() {
 		
+		return this.actEnt;
 	}
 	
 
