@@ -68,7 +68,7 @@ public class Process2 { //process enter, out, changeHost msg
 	
 	private void emit_2() { //change host event's occured by host has been out from room
 		
-		String msg="{h:1, b : 0, a:2 ,pid : "+room.getHostPid()+"}"; //JSON msg. ajax 硫붿떆吏�媛� �굹以묒뿉 �룄李⑺븯�뒗 寃껋쓣 諛⑹��븯湲� �쐞�빐 msg瑜� 癒쇱� 諛쏆쑝硫� �겢�씪�씠�뼵�듃�뒗 ajax濡� �샇�뒪�듃 �꽕�젙 �씠�썑 �슂泥��빐�빞 �븳�떎.
+		String msg="{h:1, b : 0, a:2 ,pid : "+room.getHostPid()+"}"; //JSON msg. ajax로 조회해야 할 것들 : 자신의 PID, 전체 게임 참가자 리스트 <-> 들어온 사람 정보.
 		
 		Queue<Integer> q = room.getPlayers();
 		
