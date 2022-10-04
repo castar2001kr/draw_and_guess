@@ -21,7 +21,7 @@ public class MsgEntrance {
 
 			@Override
 			public void submit(String msg, int pid) {
-			
+				
 				ent.answer(msg, pid);
 				ent.chat(msg);
 			}
