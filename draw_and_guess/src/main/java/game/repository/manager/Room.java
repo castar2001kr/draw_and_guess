@@ -7,6 +7,7 @@ import game.repository.ActRouter.ActEntrance;
 import game.repository.MsgRouter.MsgEntrance;
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
+import game.repository.idgenerator.Node;
 import game.repository.player.Player;
 import member.dto.MemberDTO;
 
@@ -41,7 +42,7 @@ public class Room {
 	
 	synchronized public boolean enter(Player p) { 	
 		
-		int pid = idGen.getID();
+		int pid = idGen.getID(p.getName());
 		
 		if(pid<0||this.cleared) {
 			return false;
@@ -75,11 +76,11 @@ public class Room {
 			
 			this.stop();
 			
-			Queue<Integer> q = this.idGen.getAll();
+			Queue<Node> q = this.idGen.getAll();
 			
 			while(!q.isEmpty()) {
 				
-				int temp = (int) q.poll();
+				int temp = (int) q.poll().getId();
 				
 				if(this.idGen.get(temp)==null||this.idGen.get(temp).getState()==false) {
 					
@@ -101,7 +102,7 @@ public class Room {
 		return false;
 	}
 	
-	public Queue<Integer> getPlayers() {
+	public Queue<Node> getPlayers() {
 		
 		return this.idGen.getAll();
 		

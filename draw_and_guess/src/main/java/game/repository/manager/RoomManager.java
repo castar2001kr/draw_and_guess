@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import game.repository.idgenerator.IdGenerator;
 import game.repository.idgenerator.Info;
+import game.repository.idgenerator.Node;
 import game.repository.player.Player;
 
 public class RoomManager {
@@ -29,7 +30,7 @@ public class RoomManager {
 	
 	public int makeRoom(Player p, String title) {
 		
-		int rid = this.idGen.getID();
+		int rid = this.idGen.getID(title);
 		
 		if(rid<0) {
 			return -1;
@@ -56,7 +57,7 @@ public class RoomManager {
 		
 	}
 	
-	public Queue<Integer> getRooms() {
+	public Queue<Node> getRooms() {
 		
 		return this.idGen.getAll();
 		

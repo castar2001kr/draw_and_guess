@@ -2,6 +2,7 @@ package game.repository.process;
 
 import java.util.Queue;
 
+import game.repository.idgenerator.Node;
 import game.repository.manager.Room;
 
 public class Process1 {
@@ -41,11 +42,11 @@ public class Process1 {
 	
 	private void sendAll(String msg) {
 		
-		Queue<Integer> q = room.getPlayers();
+		Queue<Node> q = room.getPlayers();
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().propMsg(msg);
+			room.getPlayer(q.poll().getId()).getInfo().propMsg(msg);
 			
 		}
 		

@@ -1,6 +1,5 @@
 package game.repository.idgenerator;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class IdGenerator<E> {
 			
 			Node n = new Node();
 			
-			n.id=temp;
+			n.setId(temp);
 			
 			synchronized(nodeMap) {
 				
@@ -104,6 +103,48 @@ public class IdGenerator<E> {
 			return temp;
 	
 	}
+	
+	public int getID(String name) {
+			
+			if(this.lock_regist) {
+				return -1;
+			}
+			
+			Object tmp;
+			
+			synchronized(bucket) {
+				
+				tmp = bucket.poll();
+				
+			}
+				if(tmp==null) {
+					return -1;
+				}
+				
+				int temp=(int)tmp;
+				
+				Node n = new Node();
+				
+				n.setId(temp);;
+				
+				n.setName(name);
+				
+				synchronized(nodeMap) {
+					
+					n.setBefore(lastNode);
+					
+					lastNode.setAfter(n);
+					
+					nodeMap.put(temp, n); //must be synchronized 
+					
+					lastNode=n;
+					
+				}
+				
+				return temp;
+		
+		}
+		
 	
 	public boolean erase(int id) {
 		
@@ -136,9 +177,9 @@ public class IdGenerator<E> {
 		
 	}
 	
-	public Queue<Integer> getAll() {
+	public Queue<Node> getAll() {
 			
-			Queue<Integer> result=new LinkedList<>();
+			Queue<Node> result=new LinkedList<>();
 			
 			if(lastNode.equals(firstNode)) {
 				return result;
@@ -148,7 +189,7 @@ public class IdGenerator<E> {
 			
 			while(cur!=null) {
 				
-				result.add(cur.id);
+				result.add(cur);
 				cur=cur.after;
 			}
 			

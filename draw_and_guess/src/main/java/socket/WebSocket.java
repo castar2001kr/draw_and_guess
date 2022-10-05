@@ -26,7 +26,7 @@ import member.dto.MemberDTO;
 //메시지 핸들러는 Msg라우터를 통하여 처리되게 한다.
 //OnCLose에 따라 MsgSubmit을 하는 타이머 태스크가 동작을 멈추도록 한다
 
-@ServerEndpoint(value = "/game.io/{rid}/{roomname}", configurator = Config.class)
+@ServerEndpoint(value = "/game.io/{rid}", configurator = Config.class)
 public class WebSocket {
 
 	private Player player;
@@ -37,39 +37,20 @@ public class WebSocket {
 	private int pid;
 	
 	@OnOpen
-	public void handleOpen(Session session, EndpointConfig config , @PathParam("rid") Integer rid, @PathParam("roomname") String roomname) {
+	public void handleOpen(Session session, EndpointConfig config , @PathParam("rid") Integer rid) throws IOException {
+		
+		
 		
 		this.hs= (HttpSession) config.getUserProperties().get("SESSION");
-		
-		MemberDTO dto = (MemberDTO) hs.getAttribute("memberInfo");
-		
-		if(hs.getAttribute("state").equals(false)) {
-			
-			this.player  = new Player();
-			player.setId(dto.getId());
-			player.setLv(dto.getLv());
-			player.setName(dto.getName());
-			
-			Info<Room> info= RoomManager.getInstance().getRoom(rid);
-			this.room=info.getInfo();
-			if(this.room.enter(player)) {
-				
-				hs.setAttribute("state", true);
-			}
-				
-			
-			
-		}else {
-			
-			Info<Room> info= RoomManager.getInstance().getRoom(rid);
-			this.room=info.getInfo();
-			this.player=(Player) hs.getAttribute("player");
+
+		if(!(Boolean)(hs.getAttribute("state"))) {
+			session.close();
 		}
-			
+		
+		Info<Room> info= RoomManager.getInstance().getRoom(rid);
+		this.room=info.getInfo();
+		this.player=(Player) hs.getAttribute("player");
 		this.pid=this.player.getPid();
-		
-		
-		
 		this.actEnt=room.getAct();
 		this.pid=this.player.getPid();
 		
@@ -100,19 +81,25 @@ public class WebSocket {
 	@OnClose
 	public void handleClose() {
 		
+		
+		if(timer!=null)
 		timer.cancel();
+		if(room!=null)
 		room.out(player);
+
 		hs.removeAttribute("player");
-		hs.removeAttribute("rid");
 		
 		
 	}
 	
 	@OnError
-	public void handleError() {
+	public void handleError(Throwable throwable) {	// 나가기 버튼을 따로 구현하면 close나 error를 바꿀 수 있다.
 		
+		if(timer!=null)
 		timer.cancel();
+		if(room!=null)
 		room.out(player);
+		
 		hs.removeAttribute("player");
 	}
 	

@@ -2,6 +2,7 @@ package game.repository.process;
 
 import java.util.Queue;
 
+import game.repository.idgenerator.Node;
 import game.repository.manager.Room;
 import game.repository.player.Player;
 
@@ -27,11 +28,11 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		String msg = "{h : 1, p : "+in+", a : 3, b : 0 }"; //JSON msg
 		
-		Queue<Integer> q=room.getPlayers();
+		Queue<Node> q=room.getPlayers();
 		
 		while(!q.isEmpty()) {
 			
-			int temp = q.poll();
+			int temp = q.poll().getId();
 			
 			room.getPlayer(temp).getInfo().propMsg(msg);
 			
@@ -50,11 +51,11 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		String msg = "{h : 1, p :"+ out +", a : 5, b : 0 }"; //JSON msg
 		
-		Queue<Integer> q=room.getPlayers();
+		Queue<Node> q=room.getPlayers();
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().propMsg(msg);
+			room.getPlayer(q.poll().getId()).getInfo().propMsg(msg);
 		}
 		
 		if(hostChanged) {
@@ -70,11 +71,11 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		String msg="{h:1, b : 0, a:2 ,pid : "+room.getHostPid()+"}"; //JSON msg. ajax로 조회해야 할 것들 : 자신의 PID, 전체 게임 참가자 리스트 <-> 들어온 사람 정보.
 		
-		Queue<Integer> q = room.getPlayers();
+		Queue<Node> q = room.getPlayers();
 		
 		while(!q.isEmpty()) {
 			
-			room.getPlayer(q.poll()).getInfo().propMsg(msg);
+			room.getPlayer(q.poll().getId()).getInfo().propMsg(msg);
 		}
 		
 	}
