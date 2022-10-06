@@ -44,11 +44,16 @@ public class Room {
 		
 		int pid = idGen.getID(p.getName());
 		
+		if(p.getState()) { // 10.06
+			return false;
+		}
+		
 		if(pid<0||this.cleared) {
 			return false;
 		}
 		
 		p.setPid(pid);
+		p.setState(true); // 10.06
 		
 		Info<Player> info=new Info<Player>();
 

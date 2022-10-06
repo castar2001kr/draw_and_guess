@@ -125,11 +125,11 @@ public class IdGenerator<E> {
 				
 				Node n = new Node();
 				
-				n.setId(temp);;
+				n.setId(temp);
 				
 				n.setName(name);
 				
-				synchronized(nodeMap) {
+				synchronized(nodeMap) { 
 					
 					n.setBefore(lastNode);
 					
@@ -182,7 +182,11 @@ public class IdGenerator<E> {
 			Queue<Node> result=new LinkedList<>();
 			
 			if(lastNode.equals(firstNode)) {
-				return result;
+				
+				if(lastNode==null) {
+					
+					return result;
+				}
 			}
 			
 			Node cur = this.firstNode.after;

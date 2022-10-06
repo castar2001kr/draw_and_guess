@@ -11,8 +11,6 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 </head>
 <body>
-    <!-- here navbar 인클루딩 필요합니다.-->
-
     <form name="form" method="post">
         <div class="mb-3">
           <label for="id" class="form-label" >아이디</label>
@@ -33,15 +31,17 @@
 
             $.ajax({
                 type : 'post',
-                url : 'http://localhost:8080/login',
+                url : '/login',
                 data : queryString,
                 dataType : 'json',
                 error: function(xhr, status, error){
                     alert(error);
                 },
                 success : function(e){
-                  
+                    
+                    console.log(e);
                     login_check_and_go(e)
+                  
                     
                 }
             });
@@ -51,9 +51,10 @@
         function login_check_and_go(e){  // 로그인시 리다이렉션 구현
 
             if(e.result){
-                
+
                 setCookie("id",e.id,2);
                 setCookie("name",e.name,2);
+                location.href="/";
 
             }else{
                 
@@ -64,10 +65,10 @@
 
         function setCookie(name, value, exp){
             let date = new Date();
-            data.setTime(data.getTime()+exp*60*60*1000);
+            date.setTime(date.getTime()+exp*60*60*1000);
             
             document.cookie= name + '=' + value +
-            ';expries=' + data.toUTCString() +
+            ';expries=' + date.toUTCString() +
             ';path=/';
         }
          

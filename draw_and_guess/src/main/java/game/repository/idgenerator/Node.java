@@ -11,7 +11,7 @@ public class Node {
 	
 	private String name;
 	
-	public Node(Node before, Node after) {
+	public Node(Node before, Node after) { //for making new last node
 			
 			this.before=before;
 			this.after=after;

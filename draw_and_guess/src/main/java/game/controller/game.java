@@ -52,8 +52,9 @@ public class game extends HttpServlet {
 		
 		if(paths[1].equals("newroom")) {
 			
+			
 			ServletContext context = this.getServletContext();
-			RequestDispatcher dispatcher = context.getRequestDispatcher("/WEB-INF/game/newroom.html");
+			RequestDispatcher dispatcher = context.getRequestDispatcher("/container/newroom.html");
 			dispatcher.forward(request, response);
 			return;
 			
@@ -64,48 +65,70 @@ public class game extends HttpServlet {
 			Queue<Node> q = RoomManager.getInstance().getRooms();
 			
 			JSONArray jarray = new JSONArray();
+			JSONObject result = new JSONObject();
 			
 			while(!q.isEmpty()) {
 				
 				JSONObject obj = new JSONObject();
 				obj.put("id", q.peek().getId());
 				obj.put("name", q.peek().getName());
-				jarray.add(obj.toJSONString());
+				
+				
+				jarray.add(obj);
+				q.poll();
+				
 			}
 			
-			response.getWriter().print(jarray.toJSONString());
+			result.put("result", jarray);
+			
+			response.getWriter().print(result.toJSONString());
 		}else {
 					// game/rid , roomname=?  // room 입장, 입장여부 확인
 			try{
 				
 				String rn=(String) request.getAttribute("roomname");
 				
-				MemberDTO dto=(MemberDTO) request.getSession().getAttribute("memberDTO");
+				MemberDTO dto=(MemberDTO) request.getSession().getAttribute("MemberDTO");
 				
 				int rid =Integer.parseInt(paths[1]);
-				Player player  = new Player();
-				player.setId(dto.getId());
-				player.setLv(dto.getLv());
-				player.setName(dto.getName());
 				
+				
+				
+				if(request.getSession().getAttribute("player")!=null) {
+					
+					if(((Player)(request.getSession().getAttribute("player"))).getState()) {
+						
+						JSONObject obj = new JSONObject();
+						obj.put("result", false);
+						obj.put("msg", "you already entered room!!");
+						response.getWriter().print(obj.toJSONString());
+						return;
+						
+					}
+				}else {
+					
+					Player player  = new Player();
+					player.setId(dto.getId());
+					player.setLv(dto.getLv());
+					player.setName(dto.getName());
+					request.getSession().setAttribute("player", player);
+					
+				}
+					
 				
 				Info<Room> rinfo = RoomManager.getInstance().getRoom(rid);
 				boolean checkval = false;
 				
 				if(rinfo.getInfo().getTitle()==rn) {
 					
-					checkval = rinfo.getInfo().enter(player);
-					
-					if(checkval) {
+					checkval = rinfo.getInfo().enter((Player)request.getSession().getAttribute("player"));
 						
-						request.getSession().setAttribute("state", true);
-						request.getSession().setAttribute("player", player);
-						
-					}
 				}
+				
+				JSONObject obj = new JSONObject();
+				obj.put("result", checkval);
 					
-					
-				response.getWriter().print(checkval);
+				response.getWriter().print(obj.toJSONString());
 								
 				
 				
@@ -137,32 +160,76 @@ public class game extends HttpServlet {
 		
 		if(paths[1].equals("roomlist")) {				//roomlist에 올리기. 방 생성.
 			
-			MemberDTO dto=(MemberDTO) request.getSession().getAttribute("memberDTO");
-			
-			Player player  = new Player();
-			player.setId(dto.getId());
-			player.setLv(dto.getLv());
-			player.setName(dto.getName());
 			
 			
+			
+			MemberDTO dto=(MemberDTO) request.getSession().getAttribute("MemberDTO");
+			
+			if(dto==null) {
+				
+				JSONObject obj = new JSONObject();
+				obj.put("result", false);
+				obj.put("msg", "you must login before make a room!!");
+				response.getWriter().print(obj.toJSONString());
+				return;
+	
+			}
+			
+			
+			
+			if(request.getSession().getAttribute("player")!=null) {
+				
+				if(((Player)(request.getSession().getAttribute("player"))).getState()) {
+					
+					JSONObject obj = new JSONObject();
+					obj.put("result", false);
+					obj.put("msg", "you already entered room!!");
+					response.getWriter().print(obj.toJSONString());
+					return;
+					
+				}
+				
+			}else {
+				
+				Player player  = new Player();
+				player.setId(dto.getId());
+				player.setLv(dto.getLv());
+				player.setName(dto.getName());
+				request.getSession().setAttribute("player", player);
+				
+			}
+
 			try {
 				
 				String title = (String) request.getParameter("title"); // post title=?
 				
-				int rid = RoomManager.getInstance().makeRoom(player, title);
-				request.getSession().setAttribute("state", true);
-				request.getSession().setAttribute("player", player);
+				int rid = RoomManager.getInstance().makeRoom((Player)request.getSession().getAttribute("player"), title);
+				
 				
 				JSONObject jobj=new JSONObject();
 				
-				jobj.put("title", title);
-				jobj.put("rid", rid);
+				jobj.put("result", true);
+				
 				
 				response.getWriter().print(jobj.toJSONString());
+				
+				System.out.println(jobj.toJSONString());
+				
 				
 				
 				
 			}catch (Exception e) {
+				
+				JSONObject jobj=new JSONObject();
+				
+				jobj.put("result", false);
+				jobj.put("msg", "error");
+				
+				e.printStackTrace();
+				
+				
+				response.getWriter().print(jobj.toJSONString());
+				
 				// TODO: handle exception
 			}
 		}

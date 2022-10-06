@@ -43,15 +43,22 @@
 
                     $.ajax({
                         type : 'post',
-                        url : 'http://localhost:8080/regist',
+                        url : '/regist',
                         data : queryString,
                         dataType : 'json',
                         error: function(xhr, status, error){
                             alert(error);
                         },
                         success : function(e){
-                            alert(e)
-                            console.log(e)
+                         
+                            
+                            if(e.result){
+                            	location.href="/";
+                            }else{
+                            	alert("아이디가 중북이거나 형식이 맞지 않음.")
+                            }
+                            
+                            
                         }
                     });
  

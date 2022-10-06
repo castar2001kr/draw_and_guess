@@ -11,18 +11,23 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 </head>
 <body>
-    <!-- here navbar 인클루딩 필요합니다.-->
-
-    <form name="form" method="post">
+ <form name="form" method="post">
         <div class="mb-3">
-            <label for="로그인" class="form-label" >닉네임</label>
+            <label for="로그인" class="form-label" >방만들기</label>
             <input type="text" class="form-control" name="title" placeholder="방 제목을 입력하세요.">
+        
         </div>
          
         <button type="button" onclick="regist_to_ajax()" class="btn btn-primary">방 생성</button>
       </form>
-      <script>
+  
 
+
+</body>
+    <script>
+  
+
+   
         
         
         function regist_to_ajax(){
@@ -30,15 +35,21 @@
 
                     $.ajax({
                         type : 'post',
-                        url : 'http://localhost:8080/game/roomlist',
+                        url : '/game/roomlist',
                         data : queryString,
                         dataType : 'json',
                         error: function(xhr, status, error){
                             alert(error);
                         },
                         success : function(e){
-                            alert(e)
+                        	
+                        	if(e.result){
+                        		
+                        	}else{
+                        		
+                            alert(e.msg);
                             console.log(e)
+                        	}
                         }
                     });
  
@@ -55,5 +66,7 @@
         })
         */
       </script>
-</body>
+      <script src="/index/jquery.js"></script>
+      <script src="/index/navbar.js"></script>
+
 </html>

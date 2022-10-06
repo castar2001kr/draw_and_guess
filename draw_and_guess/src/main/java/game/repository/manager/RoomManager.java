@@ -30,11 +30,18 @@ public class RoomManager {
 	
 	public int makeRoom(Player p, String title) {
 		
+		if(p.getState()) {
+			System.out.println(p.getState());
+			return -1;
+		}
+		
 		int rid = this.idGen.getID(title);
 		
 		if(rid<0) {
 			return -1;
 		}
+		
+		System.out.println("red : "+rid);
 
 		Info<Room> info = new Info<Room>();
 		

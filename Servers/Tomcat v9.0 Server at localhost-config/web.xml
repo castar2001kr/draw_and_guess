@@ -499,6 +499,10 @@
         <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
         <async-supported>true</async-supported>
     </filter>
+    
+    
+    
+    
 -->
 
   <!-- A filter that sets character encoding that is used to decode -->
@@ -527,6 +531,7 @@
         <async-supported>true</async-supported>
     </filter>
 -->
+
 
 
   <!-- NOTE: An SSI Servlet is also available as an alternative SSI         -->
@@ -4730,5 +4735,8 @@
         <welcome-file>index.htm</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+
+
 
 </web-app>

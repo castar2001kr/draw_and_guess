@@ -69,9 +69,10 @@ public class login extends HttpServlet {
 		m=MemberService.getInstance().search(m);
 		
 		request.getSession().setAttribute("MemberDTO", m);
+		MemberDTO x = (MemberDTO) request.getSession().getAttribute("MemberDTO");
 		
-		
-		
+		if(x!=null)
+		System.out.println(x.getId());
 	}
 	
 	@Override
