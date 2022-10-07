@@ -1,4 +1,4 @@
-
+let interface:
 let url = location.href;
 url=url.split('/');
 url="ws:"+"//"+url[2]+"/game.io";
@@ -634,4 +634,4 @@ refresh();
 
 let CANVAS = document.querySelector(".canvas1");
 console.log(CANVAS)
-const interface = new SocketInterface(CANVAS);
+interface = new SocketInterface(CANVAS);
