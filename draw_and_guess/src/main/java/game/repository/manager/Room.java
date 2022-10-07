@@ -54,6 +54,7 @@ public class Room {
 		
 		p.setPid(pid);
 		p.setState(true); // 10.06
+		p.setRoom(rid);
 		
 		Info<Player> info=new Info<Player>();
 

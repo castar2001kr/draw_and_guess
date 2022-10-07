@@ -18,7 +18,7 @@
         
         </div>
          
-        <button type="button" onclick="regist_to_ajax()" class="btn btn-primary">방 생성</button>
+        <button type="button" onclick="create_room_ajax()" class="btn btn-primary">방 생성</button>
       </form>
   
 
@@ -30,7 +30,7 @@
    
         
         
-        function regist_to_ajax(){
+        function create_room_ajax(){
             var queryString = $("form[name=form]").serialize() ;
 
                     $.ajax({
@@ -44,6 +44,9 @@
                         success : function(e){
                         	
                         	if(e.result){
+                        		
+                        		alert("방에 입장합니다.")
+                        		location.href="/enter"
                         		
                         	}else{
                         		

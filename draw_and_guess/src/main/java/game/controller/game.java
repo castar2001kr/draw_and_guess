@@ -86,7 +86,7 @@ public class game extends HttpServlet {
 					// game/rid , roomname=?  // room 입장, 입장여부 확인
 			try{
 				
-				String rn=(String) request.getAttribute("roomname");
+				String rn=(String) request.getParameter("title");
 				
 				MemberDTO dto=(MemberDTO) request.getSession().getAttribute("MemberDTO");
 				
@@ -106,6 +106,8 @@ public class game extends HttpServlet {
 						
 					}
 				}else {
+					System.out.println("no session att");
+					System.out.println("rn : "+rn);
 					
 					Player player  = new Player();
 					player.setId(dto.getId());
@@ -119,9 +121,10 @@ public class game extends HttpServlet {
 				Info<Room> rinfo = RoomManager.getInstance().getRoom(rid);
 				boolean checkval = false;
 				
-				if(rinfo.getInfo().getTitle()==rn) {
+				if(rinfo.getInfo().getTitle().equals(rn)) {
 					
 					checkval = rinfo.getInfo().enter((Player)request.getSession().getAttribute("player"));
+					System.out.println("enter trial result : "+checkval);
 						
 				}
 				
@@ -196,6 +199,7 @@ public class game extends HttpServlet {
 				player.setLv(dto.getLv());
 				player.setName(dto.getName());
 				request.getSession().setAttribute("player", player);
+				System.out.println("new player has been made");
 				
 			}
 

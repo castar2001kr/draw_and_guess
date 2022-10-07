@@ -31,7 +31,7 @@ public class Process0 {
 				
 				this.winnerPid=pid;
 				
-				String msg = "{ h : 0, p : " + this.winnerPid + " , a : 1 , b : 0 }";
+				String msg = "{ h : 0, p : " + this.winnerPid + " , a : 0 , b : 0 }"; //0 means corrected answer
 				
 				sendAll(msg);
 				

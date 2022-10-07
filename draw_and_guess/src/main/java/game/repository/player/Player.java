@@ -1,8 +1,10 @@
 package game.repository.player;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
 import org.json.simple.JSONArray;
@@ -10,6 +12,8 @@ import org.json.simple.JSONArray;
 public class Player {
 	
 	private Session session;
+	
+	private int rid;
 	
 	private int pid;
 	
@@ -21,9 +25,10 @@ public class Player {
 	
 	private int score;
 	
-	private Queue<String> msgQ;
+	private Queue<String> msgQ = new LinkedList<String>();
 	
 	private boolean state = false;
+	
 	
 
 	public String getName() {
@@ -116,6 +121,20 @@ public class Player {
 	
 	public void plusScore(int s) {
 		this.score+=s;
+	}
+
+	public void setRoom(int rid) {
+		// TODO Auto-generated method stub
+		this.rid=rid;
+	}
+	
+	public int getRoom() {
+		return this.rid;
+	}
+
+	public void setSession(Session hs) {
+		// TODO Auto-generated method stub
+		this.session=hs;
 	}
 	
 }

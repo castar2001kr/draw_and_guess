@@ -26,7 +26,7 @@ import member.dto.MemberDTO;
 //메시지 핸들러는 Msg라우터를 통하여 처리되게 한다.
 //OnCLose에 따라 MsgSubmit을 하는 타이머 태스크가 동작을 멈추도록 한다
 
-@ServerEndpoint(value = "/game.io/{rid}", configurator = Config.class)
+@ServerEndpoint(value = "/game.io", configurator = Config.class)
 public class WebSocket {
 
 	private Player player;
@@ -37,15 +37,31 @@ public class WebSocket {
 	private int pid;
 	
 	@OnOpen
-	public void handleOpen(Session session, EndpointConfig config , @PathParam("rid") Integer rid) throws IOException {
+	public void handleOpen(Session session, EndpointConfig config) throws IOException {
 		
 		
 		
 		this.hs= (HttpSession) config.getUserProperties().get("SESSION");
+		System.out.println(hs);
 
-		if(!(Boolean)(hs.getAttribute("state"))) {
+		if(hs==null || hs.getAttribute("player")==null)
+		{	
+			System.out.println("player attribute is null!!!");
 			session.close();
+			return;
 		}
+		if(!(((Player)hs.getAttribute("player")).getState())) {
+			session.close();
+			System.out.println("closing session");
+			return;
+		}
+		
+		this.player=(Player) hs.getAttribute("player");
+		this.player.setSession(session);
+		
+		System.out.println("소켓접속!!");
+		
+		int rid = player.getRoom();
 		
 		Info<Room> info= RoomManager.getInstance().getRoom(rid);
 		this.room=info.getInfo();
@@ -89,11 +105,15 @@ public class WebSocket {
 
 		hs.removeAttribute("player");
 		
+		System.out.println("플레이어 나감.");
+		
 		
 	}
 	
 	@OnError
 	public void handleError(Throwable throwable) {	// 나가기 버튼을 따로 구현하면 close나 error를 바꿀 수 있다.
+		
+		throwable.printStackTrace();
 		
 		if(timer!=null)
 		timer.cancel();

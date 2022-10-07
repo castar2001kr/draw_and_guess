@@ -3,6 +3,10 @@ package game.repository.ActRouter;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import game.repository.manager.Room;
 import game.repository.player.Player;
 import game.repository.process.Process0;
@@ -60,7 +64,26 @@ public class Router012 {
 		
 		if(pstate) {
 			
-			boolean corrected = pro0.emit_0(msg, 0); //player corrected the answer
+			JSONParser parser = new JSONParser();
+			JSONObject obj;
+			try {
+				obj = (JSONObject) parser.parse(msg);
+				
+			} catch (ParseException e) {
+				
+				return;
+			}
+			
+			long action= (long)(obj.get("a"));
+			
+			if(action!=1) {
+				return;
+			}
+			
+					
+			String ans = (String) obj.get("b");
+			
+			boolean corrected = pro0.emit_0(ans, pid); //player corrected the answer
 			
 			if(corrected) {
 				

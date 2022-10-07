@@ -16,7 +16,7 @@ public class MsgEntrance {
 		
 		this.ent =ent;
 		
-		r=new MsgRouter[7];
+		r=new MsgRouter[8];
 		r[0]=new MsgRouter() {
 
 			@Override
@@ -37,7 +37,7 @@ public class MsgEntrance {
 			}
 		};
 		
-		r[3]=new MsgRouter() {
+		r[1]=new MsgRouter() {
 			@Override
 			public void submit(String msg, int pid) {
 				// TODO Auto-generated method stub
@@ -46,6 +46,32 @@ public class MsgEntrance {
 				
 			}
 			
+			
+		};
+		
+		r[7]=new MsgRouter() {
+
+			@Override
+			public void submit(String msg, int pid) {
+				// TODO Auto-generated method stub
+				
+				JSONParser parser = new JSONParser();
+				try {
+					JSONObject obj = (JSONObject) parser.parse(msg);
+					long action =  (long) obj.get("a");
+					String ans = (String) obj.get("b");
+					
+					if(action==1) {
+						ent.play(null, ans);
+					}
+					
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 			
 		};
 		
