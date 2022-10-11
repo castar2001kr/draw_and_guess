@@ -97,23 +97,25 @@ public class WebSocket {
 	
 	@OnClose
 	public void handleClose() {
-		
-		
-		if(timer!=null)
-		timer.cancel();
-		if(room!=null)
-		room.getAct().out(player);
 
 		
 		System.out.println("플레이어 나감.");
 		
 		try {
+			
+			if(timer!=null)
+				timer.cancel();
+				if(room!=null)
+				room.getAct().out(player);
+			
 			hs.removeAttribute("player");
 			
 			
 		}catch(Exception e) {
-			if(hs==null)
-			System.out.println("session expired");
+			if(hs==null) {
+				
+				System.out.println("session expired");
+			}
 		}
 				
 	}
@@ -121,13 +123,15 @@ public class WebSocket {
 	@OnError
 	public void handleError(Throwable throwable) {	// 나가기 버튼을 따로 구현하면 close나 error를 바꿀 수 있다.
 		
-		throwable.printStackTrace();
+		System.out.println(throwable);
 		
-		if(timer!=null)
-		timer.cancel();
-		if(room!=null)
-		room.getAct().out(player);
+		
 		try {
+			
+			if(timer!=null)
+				timer.cancel();
+				if(room!=null)
+				room.getAct().out(player);
 			
 			hs.removeAttribute("player");
 		}catch(Exception e) {
