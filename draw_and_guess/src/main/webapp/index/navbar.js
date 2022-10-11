@@ -1,6 +1,38 @@
 
+let name1;
+let id;
 
+function checkCon(){
+    $.ajax("/checkConnected").done((e)=>{
 
+        e=JSON.parse(e);
+
+        if(e.result){
+
+            navbarDeco();
+            console.log("e.result==true")
+          
+
+        }else{
+
+            $.ajax("/logout").done(()=>{
+
+                    $.ajax("/index/navbar.html")
+                .done(function(e){
+                    
+                        let refind = document.createElement("div");
+                        refind = $(refind).html(e).find('#logout');
+                        $("body").prepend(refind);
+                        
+                        
+                });
+            })
+    
+            
+        }
+
+    })
+}
 
 function getCookie(name){
 
@@ -14,63 +46,71 @@ function deleteCookie(name){
 }
 
 
-let name1 = getCookie("name");
-let id = getCookie("id");
-
-
 $(document).ready(
-function(){
 
-if(id){
+)
 
+function navbarDeco(){
 
-    $.ajax("/index/navbar.html")
-    .done(function(e){
-         let refind = document.createElement("div");
-         refind = $(refind).html(e).find('#loged');
-         
-        
-       	
-         $("body").prepend(refind);
-         $("#id").text(id);
-         $("#name").text(name1);
-       	
-       	$("#out").click(()=>{
-       	
-       		$.ajax("/logout").done(function(e){
-       		
-       			deleteCookie("name");
-       			deleteCookie("id");
-       			location.href="/";
-
+    if(id){
+    
+    
+        $.ajax("/index/navbar.html")
+        .done(function(e){
+             let refind = document.createElement("div");
+             refind = $(refind).html(e).find('#loged');
+             
+            
+               
+             $("body").prepend(refind);
+             $("#id").text(id);
+             $("#name").text(name1);
+               
+               $("#out").click(()=>{
+               
+                   $.ajax("/logout").done(function(e){
+                   
+                       deleteCookie("name");
+                       deleteCookie("id");
+                       location.href="/";
+    
+                    
+                       
+                   }
+               );
                 
-       			
-       		}
-       	);
-      	  
-    });
-})
+        });
+    })
+    
+    
+    
+    }else{
+    
+    
+        $.ajax("/logout").done(()=>{
 
+            $.ajax("/index/navbar.html")
+            .done(function(e){
+               
+                    let refind = document.createElement("div");
+                 refind = $(refind).html(e).find('#logout');
+                 $("body").prepend(refind);
+                    
+                   
+            });
 
-
-}else{
-
-
-	$.ajax("/logout");
-
-    $.ajax("/index/navbar.html")
-    .done(function(e){
+        })
+    
        
-       	 let refind = document.createElement("div");
-         refind = $(refind).html(e).find('#logout');
-         $("body").prepend(refind);
-       	 
-       	
-    });
+        
+    }
+    
     
 }
 
+name1 = getCookie("name");
+id = getCookie("id");
 
-}
-)
+console.log(id);
 
+checkCon();

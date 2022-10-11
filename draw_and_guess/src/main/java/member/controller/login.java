@@ -41,18 +41,15 @@ public class login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		
-		if(request.getSession().getAttribute("MemberDTO")!=null) {
-			System.out.println("중복로그인시도 감지");
-			return;
-		}
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		MemberDTO m = new MemberDTO();
 		
 		m.setId((String) request.getParameter("id"));
 		m.setPwd((String) request.getParameter("pw"));
 		
-		boolean result = MemberService.getInstance().login(m);
+		boolean result = MemberService.getInstance().login(m, request.getSession());
 		
 		if(result) {
 			 m = MemberService.getInstance().search(m);
@@ -66,18 +63,16 @@ public class login extends HttpServlet {
 		
 		response.getWriter().print(obj.toJSONString());
 		
-		m=MemberService.getInstance().search(m);
 		
-		request.getSession().setAttribute("MemberDTO", m);
-		MemberDTO x = (MemberDTO) request.getSession().getAttribute("MemberDTO");
-		
-		if(x!=null)
-		System.out.println(x.getId());
 	}
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		ServletContext context = this.getServletContext();
 		RequestDispatcher dispatcher = context.getRequestDispatcher("/WEB-INF/member/login.html");
 		dispatcher.forward(request, response);

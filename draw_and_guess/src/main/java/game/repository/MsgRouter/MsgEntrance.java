@@ -17,10 +17,12 @@ public class MsgEntrance {
 		this.ent =ent;
 		
 		r=new MsgRouter[8];
+		
 		r[0]=new MsgRouter() {
 
 			@Override
-			public void submit(String msg, int pid) {
+			public void submit(String msg, int pid, JSONObject obj) {
+				
 				
 				ent.answer(msg, pid);
 				ent.chat(msg);
@@ -30,16 +32,16 @@ public class MsgEntrance {
 		
 		r[5]=new MsgRouter() {
 			@Override
-			public void submit(String msg, int pid) {
+			public void submit(String msg, int pid, JSONObject obj) {
 				// TODO Auto-generated method stub
 				ent.chat(msg);
 				
 			}
 		};
 		
-		r[1]=new MsgRouter() {
+		r[3]=new MsgRouter() {
 			@Override
-			public void submit(String msg, int pid) {
+			public void submit(String msg, int pid, JSONObject obj) {
 				// TODO Auto-generated method stub
 			
 				ent.draw(msg, pid);
@@ -52,24 +54,19 @@ public class MsgEntrance {
 		r[7]=new MsgRouter() {
 
 			@Override
-			public void submit(String msg, int pid) {
+			public void submit(String msg, int pid, JSONObject obj) {
 				// TODO Auto-generated method stub
 				
-				JSONParser parser = new JSONParser();
-				try {
-					JSONObject obj = (JSONObject) parser.parse(msg);
-					long action =  (long) obj.get("a");
+			
+					System.out.println("host's start msg");
+					Long action =  (Long) obj.get("a");
 					String ans = (String) obj.get("b");
 					
-					if(action==1) {
+					if(action.intValue()==1) {
 						ent.play(null, ans);
 					}
 					
 					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				
 			}
 			
@@ -89,9 +86,11 @@ public class MsgEntrance {
 			Long head=(Long)obj.get("h"); // head
 			Long pidRecived=(Long)obj.get("p"); //pid
 			
-			if(pidRecived.equals(pid)) {
+			int h = head.intValue();
+			
+			if(pidRecived.intValue()== pid) {
 								
-				this.r[pid].submit(msg, pid);
+				this.r[h].submit(msg, pid, obj);
 				
 			}
 			

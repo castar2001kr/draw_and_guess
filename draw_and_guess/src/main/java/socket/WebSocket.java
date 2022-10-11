@@ -90,6 +90,7 @@ public class WebSocket {
 	@OnMessage
 	public void handleMsg(String msg) {
 		
+		System.out.println(msg);
 		room.speak(msg, this.pid);
 		
 	}
@@ -101,13 +102,20 @@ public class WebSocket {
 		if(timer!=null)
 		timer.cancel();
 		if(room!=null)
-		room.out(player);
+		room.getAct().out(player);
 
-		hs.removeAttribute("player");
 		
 		System.out.println("플레이어 나감.");
 		
-		
+		try {
+			hs.removeAttribute("player");
+			
+			
+		}catch(Exception e) {
+			if(hs==null)
+			System.out.println("session expired");
+		}
+				
 	}
 	
 	@OnError
@@ -118,9 +126,14 @@ public class WebSocket {
 		if(timer!=null)
 		timer.cancel();
 		if(room!=null)
-		room.out(player);
-		
-		hs.removeAttribute("player");
+		room.getAct().out(player);
+		try {
+			
+			hs.removeAttribute("player");
+		}catch(Exception e) {
+			if(hs==null)
+			System.out.println("session expired");
+		}
 	}
 	
 	

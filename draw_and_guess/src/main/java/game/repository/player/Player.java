@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Player {
 	
@@ -29,7 +30,9 @@ public class Player {
 	
 	private boolean state = false;
 	
-	
+	synchronized public void close() throws IOException {
+		this.session.close();
+	}
 
 	public String getName() {
 		return name;
@@ -107,7 +110,11 @@ public class Player {
 					
 				}
 				
-				this.session.getBasicRemote().sendText(arr.toJSONString());
+				JSONObject obj = new JSONObject();
+				
+				obj.put("arr", arr.toJSONString());
+				
+				this.session.getBasicRemote().sendText(obj.toJSONString());
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

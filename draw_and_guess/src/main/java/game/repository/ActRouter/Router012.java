@@ -114,7 +114,7 @@ public class Router012 {
 		if(pro2.emit_1(p)) {
 			
 			
-			pro1.emit_1(); //stop
+			pro1.emit_2(); //stop
 			this.pstate=false;
 			
 			if(timer!=null) {

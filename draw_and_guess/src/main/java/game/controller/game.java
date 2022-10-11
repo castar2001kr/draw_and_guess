@@ -45,7 +45,8 @@ public class game extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		
-		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		
 		String pathInfo = request.getPathInfo();
 		String[] paths=pathInfo.split("/");
@@ -60,7 +61,7 @@ public class game extends HttpServlet {
 			
 		}
 		
-		if(paths[1].equals("roomlist")) { //roomlist ¿äÃ»
+		if(paths[1].equals("roomlist")) { //roomlist ï¿½ï¿½Ã»
 			
 			Queue<Node> q = RoomManager.getInstance().getRooms();
 			
@@ -72,6 +73,7 @@ public class game extends HttpServlet {
 				JSONObject obj = new JSONObject();
 				obj.put("id", q.peek().getId());
 				obj.put("name", q.peek().getName());
+				System.out.println(q.peek().getName());
 				
 				
 				jarray.add(obj);
@@ -82,8 +84,9 @@ public class game extends HttpServlet {
 			result.put("result", jarray);
 			
 			response.getWriter().print(result.toJSONString());
+			
 		}else {
-					// game/rid , roomname=?  // room ÀÔÀå, ÀÔÀå¿©ºÎ È®ÀÎ
+					// game/rid , roomname=?  // room ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½å¿©ï¿½ï¿½ È®ï¿½ï¿½
 			try{
 				
 				String rn=(String) request.getParameter("title");
@@ -123,7 +126,7 @@ public class game extends HttpServlet {
 				
 				if(rinfo.getInfo().getTitle().equals(rn)) {
 					
-					checkval = rinfo.getInfo().enter((Player)request.getSession().getAttribute("player"));
+					checkval = rinfo.getInfo().getAct().enter((Player)request.getSession().getAttribute("player"));
 					System.out.println("enter trial result : "+checkval);
 						
 				}
@@ -138,7 +141,7 @@ public class game extends HttpServlet {
 				
 			}catch(Exception e) {
 				
-				response.getWriter().print("Àß¸øµÈ ¿äÃ»...");
+				response.getWriter().print("ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»...");
 			}
 			
 			
@@ -157,11 +160,14 @@ public class game extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String pathInfo=request.getPathInfo();
 		String[] paths = pathInfo.split("/");
 		
 		
-		if(paths[1].equals("roomlist")) {				//roomlist¿¡ ¿Ã¸®±â. ¹æ »ý¼º.
+		if(paths[1].equals("roomlist")) {				//roomlistï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½. ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 			
 			
 			

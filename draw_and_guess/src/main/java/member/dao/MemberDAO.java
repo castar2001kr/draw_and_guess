@@ -12,7 +12,6 @@ public class MemberDAO {
 
 	static private MemberDAO SingleTonDAO;
 	
-	
 	private Connection con;
 	
 	private MemberDAO() {
@@ -35,6 +34,7 @@ public class MemberDAO {
 		
 		
 	}
+	
 	
 	public static MemberDAO getInstance() {
 		
@@ -128,6 +128,7 @@ public class MemberDAO {
 				temp.setId(rs.getString("id"));
 				temp.setPwd(rs.getString("password"));
 				temp.setName(rs.getString("name"));
+			
 				
 				return temp;
 				

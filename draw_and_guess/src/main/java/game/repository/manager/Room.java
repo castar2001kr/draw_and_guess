@@ -80,8 +80,6 @@ public class Room {
 		
 		if(p.getPid()==this.getHostPid()) {
 			
-			this.stop();
-			
 			Queue<Node> q = this.idGen.getAll();
 			
 			while(!q.isEmpty()) {
@@ -132,16 +130,23 @@ public class Room {
 	}
 	
 	synchronized public void play() {
-		
-		RoomManager.getInstance().getRoom(rid).setState(false);
-		this.idGen.lock();
+		try {
+			
+			this.idGen.lock();
+		}catch(Exception e) {
+			
+		}
 		
 	}
 	
 	synchronized public void stop() {
 		
-		RoomManager.getInstance().getRoom(rid).setState(true);
-		this.idGen.unlock();
+		try {
+			
+			this.idGen.unlock();
+		}catch(Exception e) {
+			
+		}
 	}
 	
 	

@@ -6,6 +6,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import game.repository.manager.RoomManager;
+import game.repository.player.Player;
 
 /**
  * Servlet implementation class logout
@@ -27,8 +31,35 @@ public class logout extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		System.out.println("logout request detected");
-		request.getSession().invalidate();
+		HttpSession s = request.getSession();
+		
+		synchronized(s) {
+			
+			try {
+				
+				Player p= ((Player) s.getAttribute("player"));
+				RoomManager.getInstance().getRoom(p.getRoom()).getInfo().getAct().out(p);
+
+			}catch (Exception e) {
+				// TODO: handle exception
+			}finally {
+				
+				try {
+					
+					s.invalidate();
+				}catch(Exception e) {
+					
+				}
+				
+			}
+		}
+		
 		
 	}
 

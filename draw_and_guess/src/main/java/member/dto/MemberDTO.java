@@ -9,6 +9,7 @@ public class MemberDTO {
 	private String id;
 	private String pwd;
 	private String email;
+	private boolean connected;
 	
 
 	public String getName() {
@@ -42,6 +43,14 @@ public class MemberDTO {
 
 	public void setLv(int lv) {
 		this.lv=lv;
+	}
+	
+	public void setConnected(boolean bool) {
+		this.connected=bool;
+	}
+	
+	public boolean getConnected() {
+		return this.connected;
 	}
 	
 	

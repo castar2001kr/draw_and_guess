@@ -161,9 +161,11 @@ public class IdGenerator<E> {
 						lastNode=n.before;	
 					}
 					
+					if(n!=null)
 					n.erase();
 					
 					infoSet[id].setState(false);
+					bucket.add(id);
 					
 					return true;
 					

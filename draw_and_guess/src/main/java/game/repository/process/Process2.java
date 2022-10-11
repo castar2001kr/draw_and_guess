@@ -26,7 +26,7 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		int in = p.getPid();
 		
-		String msg = "{h : 1, p : "+in+", a : 3, b : 0 }"; //JSON msg
+		String msg = "{\"h\" : 1, \"p\" : "+in+", \"a\" : 3, \"b\" : \"0\" }"; //JSON msg
 		
 		Queue<Node> q=room.getPlayers();
 		
@@ -49,7 +49,7 @@ public class Process2 { //process enter, out, changeHost msg
 		
 		int out = p.getPid();
 		
-		String msg = "{h : 1, p :"+ out +", a : 5, b : 0 }"; //JSON msg
+		String msg = "{\"h\" : 1, \"p\" :"+ out +", \"a\" : 5, \"b\" : 0 }"; //JSON msg
 		
 		Queue<Node> q=room.getPlayers();
 		
@@ -67,9 +67,9 @@ public class Process2 { //process enter, out, changeHost msg
 	}
 	
 	
-	private void emit_2() { //change host event's occured by host has been out from room
+	private void emit_2() { //change host event\"s occured by host has been out from room
 		
-		String msg="{h:1, b : 0, a:2 ,pid : "+room.getHostPid()+"}"; //JSON msg. ajax로 조회해야 할 것들 : 자신의 PID, 전체 게임 참가자 리스트 <-> 들어온 사람 정보.
+		String msg="{\"h\":1, \"b\" : 0, \"a\":7 ,\"p\" : "+room.getHostPid()+"}"; //JSON msg. ajax로 조회해야 할 것들 : 자신의 PID, 전체 게임 참가자 리스트 <-> 들어온 사람 정보.
 		
 		Queue<Node> q = room.getPlayers();
 		

@@ -1,4 +1,5 @@
-let interface:
+let interface;
+let test;
 let url = location.href;
 url=url.split('/');
 url="ws:"+"//"+url[2]+"/game.io";
@@ -25,44 +26,123 @@ function playbtn_setting(sock){
 
     $(".playbtn").click(()=>{
 
-      let an =  $(".anns").text(); $(".anns").text("");
+      let an =  $(".anns").val();
     
+      console.log("i pushed my play btn");
       let obj = {
-        h:1,a:0,b:an,pid:Mypid[0],
+        h:7,a:1,b:an,p:Mypid[0],
       }
-
       sock.send(JSON.stringify(obj));
 
+      $(".anns").val("");
+
     });
+
+    
+    $(".anns").keydown(
+        (k)=>{
+            
+            console.log("keypressed")
+
+            if(k.keyCode==13){
+            	
+                k.preventDefault();
+
+                let an =  $(".anns").val();
+    
+                console.log("i pushed my play btn");
+                let obj = {
+                    h:7,a:1,b:an,p:Mypid[0],
+                }
+                sock.send(JSON.stringify(obj));
+
+                $(".anns").val("");
+              
+            }
+            
+    
+        })
+
 
 }
 
 function chatbtn_setting(sock){
 
     $("#chatemit").click(()=>{
-        let ch = $("#chat").text(); $("#chat").text("");
+        let ch = $("#chat").val(); 
 
         let obj = {
-            h:5,a:0,b:ch,pid:Mypid[0],
+            h:5,a:0,b:ch,p:Mypid[0],
           }
-
         sock.send(JSON.stringify(obj));
+        $("#chat").val("");
 
     })
+
+    $("#chat").keydown(
+
+        (k)=>{
+            console.log("chat key pressed");
+
+            if(k.keyCode==13){
+                k.preventDefault();
+                let ch = $("#chat").val(); 
+    
+                let obj = {
+                    h:5,a:0,b:ch,p:Mypid[0],
+                }
+                sock.send(JSON.stringify(obj));
+                $("#chat").val("");
+              
+            }
+            
+    
+        }
+    )
+
+    
+
 }
 
 function ansbtn_setting(sock){
 
     $("#ansemit").click(()=>{
-        let an = $("#ans").text(); $("#ans").text("");
+        let an = $("#ans").val(); 
 
         let obj = {
-            h:0,a:1,b:an,pid:Mypid[0],
+            h:0,a:1,b:an,p:Mypid[0],
           }
 
         sock.send(JSON.stringify(obj));
+        $("#ans").val("");
 
     })
+
+    $("#ans").keydown(
+        (k)=>{
+            
+            console.log("keypressed")
+
+            if(k.keyCode==13){
+            	
+                k.preventDefault();
+
+                let an = $("#ans").val(); 
+
+                let obj = {
+                    h:0,a:1,b:an,p:Mypid[0],
+                    }
+
+                sock.send(JSON.stringify(obj));
+                $("#ans").val("");
+              
+            }
+            
+    
+        }
+    )
+
+   
 
 }
 
@@ -88,12 +168,15 @@ async function refresh(){
     await gethost();
     if(Hostpid[0]==Mypid[0]){
         host_menu_visible();
-
-        interface.dfh.reset();
-
+        
+        interface.dfh.reset(false);
+        
     }else{
-        interface.dfh.reset();
+        interface.dfh.reset(false);
     }
+
+    resetprofiles();
+    console.log("refreshed!!!")
 
 }
 
@@ -124,7 +207,14 @@ function getpids(){ //플레이어들 pid, name 불러오기
             (e)=>{
                 e=JSON.parse(e);
                 console.log(e);
-                players=e.msg;
+                let players_arr=e.msg;
+
+                players=[];
+
+                players_arr.forEach(a=>{
+                    players[a.pid]=a;
+                })
+
                 resolve(true);
                 
             }
@@ -156,11 +246,14 @@ function resetprofiles(){ //플레이어 사진 등록
 
     profiles.forEach((e)=>{$(e).css('visibility','hidden');})
 
+    let count=0;
+
     players.forEach((e)=>{
         console.log(e)
-        $(profiles[e.pid]).find(".name").text(e.name);
-        $(profiles[e.pid]).find(".avatar").html("<img src='/gameIO/profile_ex.jpg' alt='아바타사진'>");
-        $(profiles[e.pid]).css('visibility','visible');
+        e.profile = profiles[count];
+        $(profiles[count]).find(".name").text(e.name);
+        $(profiles[count]).find(".avatar").html("<img src='/gameIO/profile_ex.jpg' alt='아바타사진'>");
+        $(profiles[count++]).css('visibility','visible');
     })
 
 
@@ -182,14 +275,14 @@ class drawer_for_client{
         this.working= false;
         this.buffer = [];
 
-        this.funcs = [this.dot, this.line_start, this. line_to, this.line_end];
+        this.funcs = [(x,y)=>{this.line_start(x,y)}, (x,y)=>{this.line_to(x,y)}, (x,y)=>{this.line_end(x,y)}];
     }
 
     listen(e){ // e.data.b = array 형태여야하며, 각 원소는 {x: , y: , delay: } 형태
 
-        let arr = e.data.b;
+        let arr = e.b;
 
-        while(arr[0]!=null){
+        while(arr.length!=0){
             this.buffer.push(arr.shift());
         }
 
@@ -209,10 +302,13 @@ class drawer_for_client{
         
         if(!this.bool){
 
+            console.log(this);
+
             this.dot(x,y);
             this.ctx.beginPath();
             this.ctx.moveTo(x,y);
             this.ctx.lineTo(x,y);
+            this.bool=!this.bool;
         }
 
     }
@@ -235,6 +331,7 @@ class drawer_for_client{
     order(){
         if(!this.working){
             this.do();
+            this.working=!this.working
         }
 
     }
@@ -245,7 +342,7 @@ class drawer_for_client{
 
         if(this.buffer[0]!=null){
 
-            let e=buffer.shift();
+            let e=this.buffer.shift();
             
             setTimeout(()=>{
 
@@ -311,11 +408,14 @@ class drawer_for_host{
         }
     }
 
+
     dot(e){
         this.ctx.fillRect(e.offsetX,e.offsetY,2,2);
     }
 
     down(e){
+
+        console.log("down event")
 
         if(!this.bool){
 
@@ -323,7 +423,7 @@ class drawer_for_host{
             this.ctx.beginPath();
             this.ctx.moveTo(e.offsetX,e.offsetY);
             this.ctx.lineTo(e.offsetX,e.offsetY);
-            this.buffer.push(this.timeStamp(1,e.offsetX,e.offsetY))
+            this.buffer.push(this.timeStamp(0,e.offsetX,e.offsetY))
         
             this.bool = !this.bool
         }
@@ -333,9 +433,8 @@ class drawer_for_host{
 
         if(this.bool){
 
-            this.ctx.beginPath();
-            this.ctx.moveTo(e.offsetX,e.offsetY);
-            this.ctx.lineTo(e.offsetX,e.offsetY)
+            this.ctx.lineTo(e.offsetX,e.offsetY);
+            this.ctx.stroke();
             this.buffer.push(this.timeStamp(1,e.offsetX,e.offsetY))
             if(this.buffer.length>30){
                 this.flush();
@@ -347,11 +446,10 @@ class drawer_for_host{
     up(e){
         
         if(this.bool){
-            this.ctx.beginPath();
-            this.ctx.moveTo(e.offsetX,e.offsetY);
-            this.ctx.lineTo(e.offsetX,e.offsetY);
-            this.buffer.push(this.timeStamp(1,e.offsetX,e.offsetY));
+       
+            this.buffer.push(this.timeStamp(2,e.offsetX,e.offsetY));
             this.flush();
+            this.bool=!this.bool;
         }
 
     }
@@ -362,7 +460,7 @@ class drawer_for_host{
             JSON.stringify(
                 {   h : 3,
 
-                    pid : Mypid[0],
+                    p : Mypid[0],
 
                     a: 0,
 
@@ -382,10 +480,13 @@ class drawer_for_host{
 
     set(){ //make event
 
+        console.log("making event now...")
+
         let that = this;
 
         this.canvas.addEventListener('mousedown',(e)=>{
-            ()=>that.idown(e);
+
+            that.idown(e);
         });
 
         this.canvas.addEventListener('mousemove',(e)=>{
@@ -398,19 +499,24 @@ class drawer_for_host{
     }
 
 
-    reset(pp){ //clear event
+    reset(pp){ 
 
         
         this.canvas.getContext("2d").clearRect(0,0,1000,1000);
         
-        if(!pp){
-            return;
-        }
         
-        if(Hostpid[0]==Mypid[0]){
+        
+        if(Hostpid[0]==Mypid[0]&&pp){
+          
             this.idown=this.down;
             this.iup=this.up;
             this.imove=this.move;
+        }else{
+
+            this.idown = (e)=>{}
+            this.iup = (e)=>{}
+            this.imove = (e)=>{}
+
         }
 
     }
@@ -422,17 +528,18 @@ class drawer_for_host{
 
 class Router{
 
-    constructor(canvas){
+    constructor(canvas, interf){
 
         this.canvas = canvas;
 
         this.mode =Mypid[0]==Hostpid[0];
         this.stop =true;
+        this.interface=interf;
 
         this.dfc = new drawer_for_client(this.canvas);
             
         this.dispatcher=[];
-        this.dispatcher.push([(d)=>this.onans(d)]);  //0
+        this.dispatcher.push([(d)=>this.onans(d),(d)=>this.onans(d)]);  //0
         this.dispatcher.push([]);  //1
         this.dispatcher.push([]);
         this.dispatcher.push([(d)=>this.ondraw(d)]);//3
@@ -440,35 +547,50 @@ class Router{
         this.dispatcher.push([(d)=>this.onchat(d)])//5
 
         this.dispatcher[1].push([]);
-        this.dispatcher[1].push((d)=>this.onplay(d));
-        this.dispatcher[1].push((d)=>this.onstop(d));
-        this.dispatcher[1].push((d)=>this.onenter(d));
+        this.dispatcher[1].push((d)=>this.onplay(d)); //1
+        this.dispatcher[1].push((d)=>this.onstop(d)); //2
+        this.dispatcher[1].push((d)=>this.onenter(d)); //3
         this.dispatcher[1].push(null);
-        this.dispatcher[1].push((d)=>this.onout(d));
+        this.dispatcher[1].push((d)=>this.onout(d)); //5
         this.dispatcher[1].push(null);
-        this.dispatcher[1].push((d)=>this.onhostchanged(d));
+        this.dispatcher[1].push((d)=>this.onhostchanged(d)); //7
     }
 
     onans(d){
         if(d.a==0){
             //정답 맞춘 사람 메시지 칸에 표시
             
-           let n = players[d.pid].name;
-           $(".chatlog").append("<p>"+n+"님이 정답을 맞췄습니다."+"</p>");
+           let n = players[d.p].name;
+           $(".chatlog").append("<p> ## "+n+"님이 정답을 맞췄습니다."+"</p>");
+           $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
+           this.onstop();
             
 
         }else if(d.a==1){
             //정답칸에 메시지 표시
-            profiles[d.pid].find(".anslog")
-            .append("<p>"+players[d.pid].name +" : "+d.b+"</p>"); 
+            console.log(d);
+            $(players[d.p].profile).find(".anslog")
+            .append("<p>"+players[d.p].name +" : "+d.b+"</p>"); 
+
+            $(players[d.p].profile).find(".anslog").animate({scrollTop : $(players[d.p].profile).find(".anslog")[0].scrollHeight},0);
+            
         }
     };      
     
-    onplay(d){this.stop=false; interface.dfh.reset(true)};    
+    onplay(d){
+        
+        $(".chatlog").append("<p>"+"## 호스트가 게임을 시작합니다. 그림을 맞추세요."+"</p>");
+        $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
+          
+        this.stop=false;
+        this.mode= Mypid[0]==Hostpid[0];
+        this.interface.dfh.reset(Mypid[0]==Hostpid[0]);
+    };    
 
     onstop(d){this.mode=false; this.stop=true;
         
         this.canvas.width=this.canvas.width; //setter를 이용한 초기화
+        this.interface.dfh.reset();
         
     };
 
@@ -483,28 +605,42 @@ class Router{
 
     onchat(d){
 
-        $(".chatlog").append("<p>"+players[d.pid].name +" : "+d.b+"</p>");
+        $(".chatlog").append("<p>"+players[d.p].name +" : "+d.b+"</p>");
+        $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
+
     };     // 채팅창에 채팅 표시
 
     ondraw(d){ //그림 표시
 
         
-        if(this.mode||this.stop){return;}
-        this.dfc.listen(d.data.b); 
+        if(this.mode||this.stop){ 
+            console.log("not client")
+            return;}
+        
+        console.log(d)
+        this.dfc.listen(d); 
 
 
     };     
 
     onhostchanged(d){ //호스트 바뀐 소식 알려주기.
 
-        Hostpid[0]=d.pid;
+        refresh();
 
-        if(d.pid==Mypid[0]){
+        this.canvas.width=this.canvas.width; //setter를 이용한 초기화
+
+        Hostpid[0]=d.p;
+
+        if(d.p==Mypid[0]){
             this.mode=true;
+            $(".chatlog").append("<p>"+"## 당신이 호스트입니다. 문제를 내고 그림을 그리세요."+"</p>");
+            $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
         }else{
             this.mode=false;
+            $(".chatlog").append("<p>"+"## 호스트가"+players[Hostpid[0]].name+"(으)로 변경 되었습니다."+"</p>");
+            $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
         }
-        refresh();
+        
 
     }
 }
@@ -536,7 +672,7 @@ class SocketInterface{
         
         this.dfh = new drawer_for_host(this.canvas, this.sock);
         
-        this.router=new Router(this.canvas);
+        this.router=new Router(this.canvas, this);
 
         
         
@@ -549,22 +685,35 @@ class SocketInterface{
     eventMake(){
 
         this.onmessage=(e)=>{
-            try{
+      
                 if(e==null){
                     return;
                 }
+                
+                
+                let data = JSON.parse(e.data);
+                let arr = data.arr;
 
-                e = JSON.parse(e);
+                arr=JSON.parse(arr);
 
-                let header = e.data.h;
-                let action = e.data.a? e.data.a : 0;
+                while(arr.length!=0){
+
+                    let o = arr.shift();
+                    test=o;
+                    o=JSON.parse(o);
+                    let header = o.h;
+                    let action = o.a? o.a : 0;
+                    console.log("헤더 : ",header)
+        
+                    this.router.dispatcher[header][action](o); //h,a변수에 따라서 router에 적절하게 보내줌.
+
+                }
+
     
-                this.router.dispatcher[header][action](e.data); //h,a변수에 따라서 router에 적절하게 보내줌.
 
-            }catch(msg){
-                console.log(msg)
-                console.log(e);
-            }
+                
+
+          
 
            
 
@@ -578,7 +727,17 @@ class SocketInterface{
 
         this.onopen=()=>{
 
-            alert("게임시작");
+            refresh();
+
+            if(Hostpid[0]==Mypid[0]){
+
+                console.log(Hostpid[0], Mypid[0])
+
+                $(".chatlog").append("<p>"+"## 당신이 호스트입니다. 문제를 내고 그림을 그리세요."+"</p>");
+                $(".chatlog").animate({scrollTop : $(".chatlog")[0].scrollHeight},0);
+            
+            }
+
             emitter_setting(this.sock);
         }
         
@@ -627,10 +786,9 @@ function make_ans_event(sock){
 
 }
 
+refresh();
 
 document.querySelectorAll(".profile").forEach((e)=>{profiles.push(e)});
-
-refresh();
 
 let CANVAS = document.querySelector(".canvas1");
 console.log(CANVAS)

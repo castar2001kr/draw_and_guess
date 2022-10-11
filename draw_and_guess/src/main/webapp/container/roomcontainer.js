@@ -7,7 +7,13 @@ let rooms = [];
 
 function refajax(){
 	
-    $.ajax("/game/roomlist")
+    $.ajax(
+    {
+        url: "/game/roomlist",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+    }
+
+    )
     .done((data)=>{
     
     rooms=[];
@@ -31,7 +37,7 @@ function refajax(){
             rid.innerText = e.id;
             
             let btn = document.createElement("button");
-            btn.innerText = "입장"
+            btn.innerText = "enter"
 
             $(box).append(title).append(rid).append(btn);
 

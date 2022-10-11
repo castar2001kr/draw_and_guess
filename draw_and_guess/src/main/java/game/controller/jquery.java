@@ -38,6 +38,9 @@ public class jquery extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		String pathInfo = request.getPathInfo();
 		String[] paths=pathInfo.split("/");
 		
@@ -72,7 +75,7 @@ public class jquery extends HttpServlet {
 				JSONObject o = new JSONObject();
 				o.put("result", false);
 				response.getWriter().print(o.toJSONString());
-				System.out.println("접속하지 않은 플레이어의 요청");
+				System.out.println("ajax request exception");
 			}
 			
 			
